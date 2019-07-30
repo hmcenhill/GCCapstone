@@ -1,0 +1,57 @@
+﻿@model GCCapstone.Data.User
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Role)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Role)
+        </dd>
+    </dl>
+    <hr />
+    @if(Model.Enrollment.Count > 0)
+    {
+        <h5>Enrollments</h5>
+        <ul class="row">
+            @foreach (var enrollment in Model.Enrollment)
+            {
+                <li class="col-sm-4">
+                    @enrollment.CourseId
+                </li>
+                <li class="col-sm-4">
+                    @enrollment.Course.Name
+                </li>
+                <li class="col-sm-4">
+                    @enrollment.Grade
+                </li>
+            }
+        </ul>
+    }
+
+
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.UserId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
