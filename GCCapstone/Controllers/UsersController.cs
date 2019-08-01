@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GCCapstone.Data;
+using Microsoft.AspNetCore.Http;
 
 namespace GCCapstone.Controllers
 {
     public class UsersController : Controller
     {
         private readonly DataContext _context;
+        private readonly ISession _session;
 
-        public UsersController(DataContext context)
+        public UsersController(DataContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _session = httpContextAccessor.HttpContext.Session;
+
         }
 
         // GET: Users
@@ -39,7 +43,15 @@ namespace GCCapstone.Controllers
                 return NotFound();
             }
 
-            return View(user);
+            _session.SetInt32("UserID", user.UserId);
+
+            ViewDataVM vm = new ViewDataVM();
+            vm.CurrentUser = user;
+            vm.Users = _context.Users.ToList();
+            vm.Courses = _context.Courses.ToList();
+            vm.Enrollments = _context.Enrollments.ToList();
+
+            return View(vm);
         }
 
         // GET: Users/Create

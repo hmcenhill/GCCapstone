@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GCCapstone.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190730001910_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20190801013433_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -63,6 +63,8 @@ namespace GCCapstone.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("FirstName");
+
+                    b.Property<bool>("IsAdmin");
 
                     b.Property<string>("LastName");
 

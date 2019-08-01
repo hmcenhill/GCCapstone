@@ -11,8 +11,21 @@ namespace GCCapstone.Data
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Role { get; set; }
+        public bool IsAdmin { get; set; }
+
+
 
         public ICollection<Enrollment> Enrollment { get; set; }
+
+        public void Play()
+        {
+            Console.WriteLine(Enrollment.Count);
+            foreach(var enrollment in Enrollment)
+            {
+                Console.WriteLine(enrollment.Course);
+            }
+
+        }
 
     }
 }

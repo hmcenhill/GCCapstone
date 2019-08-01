@@ -1,4 +1,4 @@
-﻿@model GCCapstone.Data.User
+﻿@model GCCapstone.Data.ViewDataVM
 
 @{
     ViewData["Title"] = "Details";
@@ -11,47 +11,57 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
+            @Html.DisplayNameFor(model => model.CurrentUser.FirstName)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
+            @Html.DisplayFor(model => model.CurrentUser.FirstName)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
+            @Html.DisplayNameFor(model => model.CurrentUser.LastName)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
+            @Html.DisplayFor(model => model.CurrentUser.LastName)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Role)
+            @Html.DisplayNameFor(model => model.CurrentUser.Role)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Role)
+            @Html.DisplayFor(model => model.CurrentUser.Role)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CurrentUser.IsAdmin)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CurrentUser.IsAdmin)
         </dd>
     </dl>
     <hr />
-    @if(Model.Enrollment.Count > 0)
+    @if (Model.Enrollments.Count > 0)
     {
         <h5>Enrollments</h5>
-        <ul class="row">
-            @foreach (var enrollment in Model.Enrollment)
+        <dl class="row">
+
+            @foreach (var enrollment in Model.Enrollments)
             {
-                <li class="col-sm-4">
-                    @enrollment.CourseId
-                </li>
-                <li class="col-sm-4">
+                <dd class="col-sm-10">
                     @enrollment.Course.Name
-                </li>
-                <li class="col-sm-4">
+                </dd>
+                <dd class="col-sm-10">
                     @enrollment.Grade
-                </li>
+                </dd>
             }
-        </ul>
+        </dl>
     }
 
+    <a asp-action="Edit" asp-route-id="@Model.CurrentUser.UserId">Edit</a> |
+
+
+    <div>
+        <a asp-action="AddCourse" asp-controller="Course">Enroll</a> |
+    </div>
 
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.UserId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.CurrentUser.UserId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

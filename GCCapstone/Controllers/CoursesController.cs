@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GCCapstone.Data;
+using Microsoft.AspNetCore.Http;
 
 namespace GCCapstone.Controllers
 {
     public class CoursesController : Controller
     {
         private readonly DataContext _context;
+        private readonly ISession _session;
 
-        public CoursesController(DataContext context)
+        public CoursesController(DataContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _session = httpContextAccessor.HttpContext.Session;
+
         }
 
         // GET: Courses

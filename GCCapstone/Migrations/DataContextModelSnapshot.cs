@@ -62,6 +62,8 @@ namespace GCCapstone.Migrations
 
                     b.Property<string>("FirstName");
 
+                    b.Property<bool>("IsAdmin");
+
                     b.Property<string>("LastName");
 
                     b.Property<string>("Role");

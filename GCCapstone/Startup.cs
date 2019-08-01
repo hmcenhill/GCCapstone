@@ -39,6 +39,13 @@ namespace GCCapstone
                 options.UseSqlServer(connection);
             });
 
+            services.AddSession(options => {
+                options.Cookie.Name = ".GrandCircus.Example";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+            services.AddDistributedMemoryCache();
+            services.AddHttpContextAccessor();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -59,7 +66,7 @@ namespace GCCapstone
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
