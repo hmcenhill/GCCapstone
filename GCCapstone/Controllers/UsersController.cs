@@ -25,7 +25,15 @@ namespace GCCapstone.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            var user = await _context.Users.Where(x => x.UserId == _session.GetInt32("CurrentUserId")).FirstOrDefaultAsync();
+            if (user.IsAdmin)
+            {
+                return View(await _context.Users.ToListAsync());
+            }
+            else
+            {
+                return RedirectToAction("Details", new { @id = user.UserId });
+            }
         }
 
         // GET: Users/Details/5
@@ -33,11 +41,10 @@ namespace GCCapstone.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction("Login");
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
+            var user = await _context.Users.FirstOrDefaultAsync(m => m.UserId == id);
             if (user == null)
             {
                 return NotFound();
@@ -47,9 +54,12 @@ namespace GCCapstone.Controllers
 
             ViewDataVM vm = new ViewDataVM();
             vm.CurrentUser = user;
-            vm.Users = _context.Users.ToList();
-            vm.Courses = _context.Courses.ToList();
-            vm.Enrollments = _context.Enrollments.ToList();
+            vm.Enrollments = _context.Enrollments.Where(x => x.User.UserId == user.UserId).ToList();
+            vm.Courses = new List<Course>();
+            foreach(var enrollment in vm.Enrollments)
+            {
+                vm.Courses.Add(_context.Courses.Where(x => x.CourseId == enrollment.CourseId).FirstOrDefault());
+            }
 
             return View(vm);
         }
@@ -61,19 +71,41 @@ namespace GCCapstone.Controllers
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,FirstName,LastName,Role")] User user)
+        public async Task<IActionResult> Create([Bind("UserId,Username,Password,FirstName,LastName,Role,IsAdmin")] User user)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _session.SetInt32("CurrentUserId", user.UserId);
+                return RedirectToAction("Details", new { @id = user.UserId });
             }
             return View(user);
+        }
+
+        // GET: Users/Login
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // POST: Users/Login
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([Bind("Username,Password")] User attempt)
+        {
+            if (ModelState.IsValid)
+            {
+                var tryLogin = await _context.Users.Where(x => x.Username == attempt.Username).FirstOrDefaultAsync();
+                if(tryLogin != null && attempt.Password == tryLogin.Password)
+                {
+                    _session.SetInt32("CurrentUserId", tryLogin.UserId);
+                    return RedirectToAction("Details", new { @id = tryLogin.UserId });
+                }
+            }
+            return View();
         }
 
         // GET: Users/Edit/5
@@ -93,11 +125,9 @@ namespace GCCapstone.Controllers
         }
 
         // POST: Users/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,FirstName,LastName,Role")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Username","Password","UserId,FirstName,LastName,Role,IsAdmin")] User user)
         {
             if (id != user.UserId)
             {

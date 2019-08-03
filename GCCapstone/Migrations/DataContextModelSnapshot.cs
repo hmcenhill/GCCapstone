@@ -66,7 +66,11 @@ namespace GCCapstone.Migrations
 
                     b.Property<string>("LastName");
 
+                    b.Property<string>("Password");
+
                     b.Property<string>("Role");
+
+                    b.Property<string>("Username");
 
                     b.HasKey("UserId");
 

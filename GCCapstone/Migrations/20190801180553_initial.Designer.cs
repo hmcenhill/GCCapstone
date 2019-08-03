@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GCCapstone.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190801013433_initial")]
+    [Migration("20190801180553_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,7 +68,11 @@ namespace GCCapstone.Migrations
 
                     b.Property<string>("LastName");
 
+                    b.Property<string>("Password");
+
                     b.Property<string>("Role");
+
+                    b.Property<string>("Username");
 
                     b.HasKey("UserId");
 

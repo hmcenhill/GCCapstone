@@ -25,7 +25,15 @@ namespace GCCapstone.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Courses.ToListAsync());
+            var user = await _context.Users.Where(x => x.UserId == _session.GetInt32("CurrentUserId")).FirstOrDefaultAsync();
+            if (user.IsAdmin)
+            {
+                return View(await _context.Courses.ToListAsync());
+            }
+            else
+            {
+                return RedirectToAction("Details", "Users", new { @id = user.UserId });
+            }
         }
 
         // GET: Courses/Details/5

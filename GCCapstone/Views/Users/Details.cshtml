@@ -53,12 +53,12 @@
         </dl>
     }
 
+
+
+<div>
     <a asp-action="Edit" asp-route-id="@Model.CurrentUser.UserId">Edit</a> |
-
-
-    <div>
-        <a asp-action="AddCourse" asp-controller="Course">Enroll</a> |
-    </div>
+    <a asp-action="Index" asp-controller="Enrollments">Enroll in Course</a> |
+</div>
 
 </div>
 <div>

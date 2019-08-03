@@ -26,8 +26,22 @@ namespace GCCapstone.Controllers
         // GET: Enrollments
         public async Task<IActionResult> Index()
         {
-            var dataContext = _context.Enrollments.Include(e => e.Course).Include(e => e.User);
-            return View(await dataContext.ToListAsync());
+            var user = await _context.Users.Where(x => x.UserId == _session.GetInt32("CurrentUserId")).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                ViewDataVM vm = new ViewDataVM();
+                vm.CurrentUser = user;
+                vm.Courses = await _context.Courses.ToListAsync();
+
+                return View(vm);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
+            // var dataContext = _context.Enrollments.Include(e => e.Course).Include(e => e.User);
+            // return View(await dataContext.ToListAsync());
         }
 
         // GET: Enrollments/Details/5
